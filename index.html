@@ -1,0 +1,99 @@
+﻿<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Crossword Game</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <h1>Crossword Game - Red vs Blue</h1>
+      <div class="controls">
+        <button id="checkBtn" type="button">Check Grid</button>
+        <button id="resetBtn" type="button">Reset Grid</button>
+      </div>
+    </header>
+
+    <section class="game-clock">
+      <span>Thoi gian con lai:</span>
+      <strong id="gameTimer">20:00</strong>
+      <span id="gameResult"></span>
+    </section>
+
+    <section class="scoreboard">
+      <div class="team team-red" id="teamRedCard">RED 
+      <div>Money $: <strong id="redMoney">0</strong> </div>
+      <div>Score  : <strong id="redScore">0</strong> </div>
+      </div>
+      <div class="turn">Luot hien tai: <strong id="currentTeam">RED</strong></div>
+      <div class="team team-blue" id="teamBlueCard">BLUE: 
+      <div>Money $: <strong id="blueMoney">0</strong> </div>
+      <div>Score  : <strong id="blueScore">0</strong> </div></div>
+    </section>
+
+    <section class="score-tools">
+      <span>Chinh diem doi dang luot:</span>
+      <button type="button" data-score-action="add" data-score-value="5">+5</button>
+      <button type="button" data-score-action="add" data-score-value="10">+10</button>
+      <button type="button" data-score-action="add" data-score-value="15">+15</button>
+      <button type="button" data-score-action="mul" data-score-value="2">x2</button>
+      <button type="button" data-score-action="mul" data-score-value="3">x3</button>
+      <button type="button" data-score-action="sub" data-score-value="60">-60 đ</button>
+    </section>
+
+    <section class="layout">
+      <div class="board-wrap">
+        <div id="board" class="board" aria-label="Crossword board"></div>
+      </div>
+
+      <aside class="qa-panel">
+        <h2>Huong dan</h2>
+        <p class="hint-text">Bam vao o chu thuoc tu khoa de mo cau hoi.</p>
+
+        <div class="answer-box">
+          <p id="selectedQuestion">Chua chon cau hoi. Bam vao o chu cua tu khoa de bat dau.</p>
+          <div class="answer-actions">
+            <button id="submitAnswerBtn" type="button">Tra loi cau dang chon</button>
+            <button id="reopenQuestionBtn" type="button">Hien lai cau hoi</button>
+            <button id="switchTurnBtn" type="button">Chuyen luot</button>
+            <div class="answer-actions">
+  <button id="forceEndBtn" type="button" style="background-color: #d9534f; color: white;">Kết thúc game: Đội này thắng</button>
+</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="legend">
+      <p><span class="legend-box yellow"></span> O vang: ky tu keyword.</p>
+      <p><span class="legend-box fixed"></span> O xam: da goi y san.</p>
+      <p id="status">Nhap dap an va bam Check Grid.</p>
+      <p id="turnStatus">Moi doi RED chon o chu tu khoa de hien cau hoi.</p>
+    </section>
+  </main>
+
+  <div id="q7Modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="qPromptTitle">
+    <div class="modal-card">
+      <h3 id="qPromptTitle">Cau hoi</h3>
+<video id="qPromptVideo" width="100%" controls class="hidden">
+  <source src="" type="video/mp4">
+  Trình duyệt của bạn không hỗ trợ video.
+</video>
+<p id="qPromptText"></p>
+      <p id="qPromptText"></p>
+
+      <div id="qPromptExtra" class="q7-table-wrap"></div>
+
+      <div class="modal-actions">
+        <button id="q7StartTimerBtn" type="button">Bat dau lai 10s</button>
+        <span id="q7Timer" class="timer">10s</span>
+        <button id="q7CloseBtn" type="button">Dong</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
