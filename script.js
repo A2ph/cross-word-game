@@ -1,4 +1,4 @@
-﻿const TEMPLATE_ROWS = [
+const TEMPLATE_ROWS = [
   "###############D####",
   "###########O-CRESOL#",
   "###############L####",
@@ -64,21 +64,23 @@ const placedWords = [
 // - yellow: can >= 30 diem
 // - red: can >= 50 diem
 const lockRules = [
-  { id: "LOCK_O-CRESOL", color: "yellow", minScore: 20, cells: makeCells(1, 11, "O-CRESOL", 0, 1) },
-  //{ id: "LOCK_SOL", color: "yellow", minScore: 30, cells: makeCells(1, 16, "SOL", 0, 1) },
-  { id: "LOCK_ANKYL", color: "yellow", minScore: 20, cells: makeCells(11, 0, "ANKYL", 0, 1) },
-  //{ id: "LOCK_TEIN", color: "yellow", minScore: 30, cells: makeCells(22, 9, "TEIN", 1, 0) },
-  { id: "LOCK_PROTEIN", color: "yellow", minScore: 20, cells: makeCells(19, 9, "PROTEIN", 1, 0) },
-  { id: "LOCK_MONOHYDROXYBENZENE", color: "red", minScore: 30, cells: makeCells(9, 0, "MONOHYDROXYBENZENE", 0, 1) },
-  //{ id: "LOCK_YD", color: "red", minScore: 50, cells: makeCells(9, 5, "YD", 0, 1) },
-  //{ id: "LOCK_OXYBENZ", color: "red", minScore: 50, cells: makeCells(9, 8, "OXYBENZ", 0, 1) },
-  //{ id: "LOCK_NE", color: "red", minScore: 50, cells: makeCells(9, 16, "NE", 0, 1) },
-  { id: "LOCK_HYDROQUINONE", color: "yellow", minScore: 20, cells: makeCells(15, 2, "HYDROQUINONE", 1, 0) },
-  //{ id: "LOCK_QUINONE", color: "red", minScore: 50, cells: makeCells(20, 2, "QUINONE", 1, 0) },
-  { id: "LOCK_RESOLCINOL", color: "red", minScore: 30, cells: makeCells(14, 17, "RESOLCINOL", 1, 0) },
-  //{ id: "LOCK_LCINOL", color: "red", minScore: 50, cells: makeCells(18, 17, "LCINOL", 1, 0) },
-  { id: "LOCK_4-METHYLPHENOL", color: "red", minScore: 30, cells: makeCells(4, 4, "4-METHYLPHENOL", 1, 0) },
-  { id: "LOCK_ITTAN", color: "yellow", minScore: 20, cells: makeCells(21, 15, "ITTAN", 1, 0) }
+  { id: "LOCK_O-CR", color: "yellow", minScore: 20, cells: makeCells(1, 11, "O-CR", 0, 1) },
+  { id: "LOCK_SOL", color: "yellow", minScore: 20, cells: makeCells(1, 16, "SOL", 0, 1) },
+  { id: "LOCK_ANKY", color: "yellow", minScore: 20, cells: makeCells(11, 0, "ANKY", 0, 1) },
+  { id: "LOCK_TEIN", color: "yellow", minScore: 20, cells: makeCells(22, 9, "TEIN", 1, 0) },
+  { id: "LOCK_PR", color: "yellow", minScore: 20, cells: makeCells(19, 9, "PR", 1, 0) },
+  { id: "LOCK_MONO", color: "red", minScore: 30, cells: makeCells(9, 0, "MONO", 0, 1) },
+  { id: "LOCK_YD", color: "red", minScore: 30, cells: makeCells(9, 5, "YD", 0, 1) },
+  { id: "LOCK_OXYBENZ", color: "red", minScore: 30, cells: makeCells(9, 8, "OXYBENZ", 0, 1) },
+  { id: "LOCK_NE", color: "red", minScore: 30, cells: makeCells(9, 16, "NE", 0, 1) },
+  { id: "LOCK_HYDR", color: "yellow", minScore: 20, cells: makeCells(15, 2, "HYDR", 1, 0) },
+  { id: "LOCK_QUINONE", color: "yellow", minScore: 20, cells: makeCells(20, 2, "QUINONE", 1, 0) },
+  { id: "LOCK_RES", color: "red", minScore: 30, cells: makeCells(14, 17, "RES", 1, 0) },
+  { id: "LOCK_LCINOL", color: "red", minScore: 30, cells: makeCells(18, 17, "LCINOL", 1, 0) },
+  { id: "LOCK_-MET", color: "red", minScore: 30, cells: makeCells(5, 4, "-MET", 1, 0) },
+  { id: "LOCK_Y", color: "red", minScore: 30, cells: makeCells(10, 4, "Y", 1, 0) },
+  { id: "LOCK_PHENOL", color: "red", minScore: 30, cells: makeCells(12, 4, "PHENOL", 1, 0) },
+  { id: "LOCK_TTAN", color: "yellow", minScore: 20, cells: makeCells(22, 15, "TTAN", 1, 0) }
 ];
 
 const questions = [
@@ -244,6 +246,7 @@ const cellToQuestionKey = new Map();
 const lockByCell = new Map();
 const lockById = new Map();
 const unlockedLockIds = new Set();
+const lockedCells = new Set();
 
 let questionTimerId = null;
 let questionRemain = 10;
@@ -554,6 +557,13 @@ function startGameTimer() {
 }
 
 function renderBoard() {
+  // 1. Lưu dữ liệu ô cũ vào một Object tạm
+  const inputs = board.querySelectorAll("input.cell");
+  const oldValues = {};
+  inputs.forEach(inp => {
+    oldValues[`${inp.dataset.row}-${inp.dataset.col}`] = inp.value;
+  });
+
   board.innerHTML = "";
   const fragment = document.createDocumentFragment();
 
@@ -575,13 +585,23 @@ function renderBoard() {
       input.dataset.col = String(c);
       input.dataset.solution = solution;
       input.setAttribute("aria-label", `Cell ${r + 1}-${c + 1}`);
+      const key = `${r}-${c}`;
+      if (oldValues[key]) {
+        input.value = oldValues[key];
+      }
+      
+      // Kiểm tra khóa
+      if(lockedCells.has(`${r}-${c}`)) {
+          input.readOnly = true;
+      }
+    
 
       if (yellowCells.has(keyFor(r, c))) {
         input.classList.add("yellow");
       }
 
       const lockId = lockByCell.get(keyFor(r, c));
-      if (lockId && !unlockedLockIds.has(lockId)) {
+      if (lockId && !unlockedLockIds.has(lockId) && !lockedCells.has(`${r}-${c}`)) {
         const lock = lockById.get(lockId);
         input.value = "🔒";
         input.readOnly = true;
@@ -591,10 +611,14 @@ function renderBoard() {
       if (!hiddenCellSet.has(keyFor(r, c))) {
         input.value = "";
         input.readOnly = false;
+        input.classList.remove("lock-cell", "lock-red", "lock-yellow");
+
         input.classList.add("fixed");
+        input.value = "";
       }
 
       input.addEventListener("click", () => {
+        
         if (document.activeElement === input) {
           activeDirection = activeDirection === "across" ? "down" : "across";
         }
@@ -678,6 +702,9 @@ checkBtn.addEventListener("click", () => {
       cell.classList.add("bad");
     } else {
       cell.classList.add("good");
+      cell.readOnly = true;
+      //cell.dataset.locked="true";
+      lockedCells.add(`${cell.dataset.row}-${cell.dataset.col}`);
     }
   });
 
@@ -734,6 +761,7 @@ submitAnswerBtn.addEventListener("click", () => {
     } else {
       cell.classList.remove("bad");
       cell.classList.add("good");
+      cell.readOnly = true;
     }
   });
 
