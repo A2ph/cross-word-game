@@ -286,6 +286,20 @@ button:hover {
   margin: 0 0 8px;
 }
 
+#qPromptVideo,
+#qPromptImage {
+  margin-top: 8px;
+  border-radius: 8px;
+}
+
+#qPromptImage {
+  display: block;
+  width: 100%;
+  max-height: 55vh;
+  object-fit: contain;
+  background: #111;
+}
+
 .q7-table-wrap {
   overflow: auto;
   border: 1px solid #888;

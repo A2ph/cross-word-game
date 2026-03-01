@@ -38,6 +38,8 @@
       <button type="button" data-score-action="add" data-score-value="5">+5</button>
       <button type="button" data-score-action="add" data-score-value="10">+10</button>
       <button type="button" data-score-action="add" data-score-value="15">+15</button>
+      <button type="button" data-score-action="add" data-score-value="-5">-5$</button>
+      <button type="button" data-score-action="add" data-score-value="-10">-10$</button>
       <button type="button" data-score-action="mul" data-score-value="2">x2</button>
       <button type="button" data-score-action="mul" data-score-value="3">x3</button>
       <button type="button" data-score-action="sub" data-score-value="60">-60 đ</button>
@@ -77,11 +79,11 @@
   <div id="q7Modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="qPromptTitle">
     <div class="modal-card">
       <h3 id="qPromptTitle">Cau hoi</h3>
-<video id="qPromptVideo" width="100%" controls class="hidden">
-  <source src="" type="video/mp4">
-  Trình duyệt của bạn không hỗ trợ video.
-</video>
-<p id="qPromptText"></p>
+      <video id="qPromptVideo" width="100%" controls hidden>
+        <source id="qPromptVideoSrc" src="" type="video/mp4">
+        Trình duyệt của bạn không hỗ trợ video.
+      </video>
+      <img id="qPromptImage" alt="Hinh minh hoa" hidden />
       <p id="qPromptText"></p>
 
       <div id="qPromptExtra" class="q7-table-wrap"></div>

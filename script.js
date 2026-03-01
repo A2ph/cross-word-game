@@ -1,4 +1,4 @@
-const TEMPLATE_ROWS = [
+﻿const TEMPLATE_ROWS = [
   "###############D####",
   "###########O-CRESOL#",
   "###############L####",
@@ -55,7 +55,7 @@ const placedWords = [
   { id: "PROTEIN", key: "PROTEIN", cells: makeCells(19, 9, "PROTEIN", 1, 0) },
   { id: "MONOHYDROXYBENZENE", key: "MONOHYDROXYBENZENE", cells: makeCells(9, 0, "MONOHYDROXYBENZENE", 0, 1) },
   { id: "HYDROQUINONE", key: "HYDROQUINONE", cells: makeCells(15, 2, "HYDROQUINONE", 1, 0) },
-  { id: "RESOLCINOL", key: "RESOLCINOL", cells: makeCells(14, 17, "RESOLCINOL", 1, 0) },
+  { id: "RESORCINOL", key: "RESORCINOL", cells: makeCells(14, 17, "RESORCINOL", 1, 0) },
   { id: "4-METHYLPHENOL", key: "4-METHYLPHENOL", cells: makeCells(4, 4, "4-METHYLPHENOL", 1, 0) },
   { id: "ITTAN", key: "ITTAN", cells: makeCells(21, 15, "ITTAN", 1, 0) }
 ];
@@ -136,11 +136,13 @@ const questions = [
   },
   {
     key: "HYDROQUINONE",
-    clue: "Nhìn video để trả lời từ khóa"
+    clue: "Nhìn hình ảnh để trả lời từ khóa",
+    imageUrl:"hydroquinone.jpg"
   },
   {
-    key: "RESOLCINOL",
-    clue: "Nhìn video để trả lời từ khóa"
+    key: "RESORCINOL",
+    clue: "Nhìn hình ảnh để trả lời từ khóa",
+    imageUrl:"resorcinol.jpg"
   },
   {
     key: "4-METHYLPHENOL",
@@ -247,6 +249,7 @@ const lockByCell = new Map();
 const lockById = new Map();
 const unlockedLockIds = new Set();
 const lockedCells = new Set();
+const intersectionCells = new Set();
 
 let questionTimerId = null;
 let questionRemain = 10;
@@ -274,6 +277,20 @@ for (const lock of lockRules) {
   lockById.set(lock.id, lock);
   for (const cell of lock.cells) {
     lockByCell.set(keyFor(cell.r, cell.c), lock.id);
+  }
+}
+
+// Cells used by 2+ placed words are intersections: never render a lock there.
+{
+  const useCount = new Map();
+  for (const w of placedWords) {
+    for (const cell of w.cells) {
+      const k = keyFor(cell.r, cell.c);
+      useCount.set(k, (useCount.get(k) || 0) + 1);
+    }
+  }
+  for (const [k, count] of useCount.entries()) {
+    if (count > 1) intersectionCells.add(k);
   }
 }
 
@@ -354,10 +371,17 @@ function showWinnerModal(winnerTeam) {
   // Thay đổi tiêu đề và nội dung modal
   // 1. ẨN VIDEO TRƯỚC TIÊN
   const videoEl = document.getElementById("qPromptVideo");
-  videoEl.classList.add("hidden");
-  videoEl.pause();
-  videoEl.querySelector("source").src = ""; // Xóa sạch src
-  videoEl.load();
+  const videoSrcEl = document.getElementById("qPromptVideoSrc");
+  if (videoEl) {
+    try { videoEl.pause(); } catch {}
+    videoEl.hidden = true;
+  }
+  if (videoSrcEl) {
+    videoSrcEl.src = "";
+  }
+  if (videoEl) {
+    try { videoEl.load(); } catch {}
+  }
 
  
   qPromptTitle.textContent = "TRÒ CHƠI KẾT THÚC";
@@ -446,6 +470,25 @@ function closeQuestionModal() {
   setBoardLocked(false);
   questionRemain = 10;
   setQuestionTimerView();
+
+  // Stop/hide media when closing.
+  const videoEl = document.getElementById("qPromptVideo");
+  const videoSrcEl = document.getElementById("qPromptVideoSrc");
+  const imgEl = document.getElementById("qPromptImage");
+  if (videoEl) {
+    try { videoEl.pause(); } catch {}
+    videoEl.hidden = true;
+  }
+  if (videoSrcEl) {
+    videoSrcEl.src = "";
+  }
+  if (videoEl) {
+    try { videoEl.load(); } catch {}
+  }
+  if (imgEl) {
+    imgEl.hidden = true;
+    imgEl.removeAttribute("src");
+  }
 }
 
 function openQuestionModalForKey(key) {
@@ -456,27 +499,39 @@ function openQuestionModalForKey(key) {
   lastOpenedQuestionKey = key;
   revealedQuestionKeys.add(key);
 
-
-
-  const videoEl = document.getElementById("qPromptVideo");
-  
-  if (q.videoUrl) {
-    videoEl.querySelector("source").src = q.videoUrl;
-    videoEl.load(); // Load lại video mới
-    videoEl.classList.remove("hidden"); // Hiện video
-    qPromptText.textContent = q.clue;
-  } else {
-    videoEl.classList.add("hidden"); // Ẩn video nếu không có
-    qPromptText.textContent = q.clue;
-  }
-  
-  
   selectedQuestionIndex = idx;
   selectedQuestionEl.textContent = `Đang chọn Câu ${idx + 1}. Điền đáp án trên bảng rồi bấm Trả lời câu đang chọn.`;
 
   qPromptTitle.textContent = `Câu ${idx + 1}`;
   qPromptText.textContent = q.clue;
   qPromptExtra.innerHTML = q.key === "NHUTUONG" ? NHUTUONG_EXTRA_HTML : "";
+
+  // Media rules:
+  // - Only show video when q.videoUrl exists
+  // - Otherwise show image if q.imageUrl exists
+  // - Otherwise show only the question text/table
+  const videoEl = document.getElementById("qPromptVideo");
+  const videoSrcEl = document.getElementById("qPromptVideoSrc");
+  const imgEl = document.getElementById("qPromptImage");
+
+  if (videoEl) {
+    try { videoEl.pause(); } catch {}
+    videoEl.hidden = true;
+  }
+  if (videoSrcEl) videoSrcEl.src = "";
+  if (imgEl) {
+    imgEl.hidden = true;
+    imgEl.removeAttribute("src");
+  }
+
+  if (q.videoUrl && videoEl && videoSrcEl) {
+    videoSrcEl.src = q.videoUrl;
+    try { videoEl.load(); } catch {}
+    videoEl.hidden = false;
+  } else if (q.imageUrl && imgEl) {
+    imgEl.src = q.imageUrl;
+    imgEl.hidden = false;
+  }
 
   highlightQuestionWord(q.key);
   qModal.classList.remove("hidden");
@@ -586,8 +641,11 @@ function renderBoard() {
       input.dataset.solution = solution;
       input.setAttribute("aria-label", `Cell ${r + 1}-${c + 1}`);
       const key = `${r}-${c}`;
-      if (oldValues[key]) {
-        input.value = oldValues[key];
+      // Never persist the lock icon across renders. Otherwise after unlocking,
+      // the cell may incorrectly stay as "🔒" because we restore oldValues first.
+      const prevVal = oldValues[key];
+      if (prevVal && prevVal !== "🔒") {
+        input.value = prevVal;
       }
       
       // Kiểm tra khóa
@@ -600,15 +658,21 @@ function renderBoard() {
         input.classList.add("yellow");
       }
 
-      const lockId = lockByCell.get(keyFor(r, c));
-      if (lockId && !unlockedLockIds.has(lockId) && !lockedCells.has(`${r}-${c}`)) {
+      const cellKey = keyFor(r, c);
+      const lockId = lockByCell.get(cellKey);
+      if (
+        lockId &&
+        !unlockedLockIds.has(lockId) &&
+        !lockedCells.has(`${r}-${c}`) &&
+        !intersectionCells.has(cellKey)
+      ) {
         const lock = lockById.get(lockId);
         input.value = "🔒";
         input.readOnly = true;
         input.classList.add("lock-cell");
         input.classList.add(lock.color === "red" ? "lock-red" : "lock-yellow");
       } else
-      if (!hiddenCellSet.has(keyFor(r, c))) {
+      if (!hiddenCellSet.has(cellKey)) {
         input.value = "";
         input.readOnly = false;
         input.classList.remove("lock-cell", "lock-red", "lock-yellow");
@@ -623,9 +687,13 @@ function renderBoard() {
           activeDirection = activeDirection === "across" ? "down" : "across";
         }
 
-        const qKey = cellToQuestionKey.get(keyFor(r, c));
-        const clickedLockId = lockByCell.get(keyFor(r, c));
-        if (clickedLockId && !unlockedLockIds.has(clickedLockId)) {
+        const qKey = cellToQuestionKey.get(cellKey);
+        const clickedLockId = lockByCell.get(cellKey);
+        if (
+          clickedLockId &&
+          !unlockedLockIds.has(clickedLockId) &&
+          !intersectionCells.has(cellKey)
+        ) {
           tryUnlock(clickedLockId);
           return;
         }
