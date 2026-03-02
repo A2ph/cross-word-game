@@ -64,61 +64,70 @@ const placedWords = [
 // - yellow: can >= 30 diem
 // - red: can >= 50 diem
 const lockRules = [
-  { id: "LOCK_O-CR", color: "yellow", minScore: 20, cells: makeCells(1, 11, "O-CR", 0, 1) },
-  { id: "LOCK_SOL", color: "yellow", minScore: 20, cells: makeCells(1, 16, "SOL", 0, 1) },
-  { id: "LOCK_ANKY", color: "yellow", minScore: 20, cells: makeCells(11, 0, "ANKY", 0, 1) },
-  { id: "LOCK_TEIN", color: "yellow", minScore: 20, cells: makeCells(22, 9, "TEIN", 1, 0) },
-  { id: "LOCK_PR", color: "yellow", minScore: 20, cells: makeCells(19, 9, "PR", 1, 0) },
-  { id: "LOCK_MONO", color: "red", minScore: 30, cells: makeCells(9, 0, "MONO", 0, 1) },
-  { id: "LOCK_YD", color: "red", minScore: 30, cells: makeCells(9, 5, "YD", 0, 1) },
-  { id: "LOCK_OXYBENZ", color: "red", minScore: 30, cells: makeCells(9, 8, "OXYBENZ", 0, 1) },
-  { id: "LOCK_NE", color: "red", minScore: 30, cells: makeCells(9, 16, "NE", 0, 1) },
-  { id: "LOCK_HYDR", color: "yellow", minScore: 20, cells: makeCells(15, 2, "HYDR", 1, 0) },
-  { id: "LOCK_QUINONE", color: "yellow", minScore: 20, cells: makeCells(20, 2, "QUINONE", 1, 0) },
-  { id: "LOCK_RES", color: "red", minScore: 30, cells: makeCells(14, 17, "RES", 1, 0) },
-  { id: "LOCK_LCINOL", color: "red", minScore: 30, cells: makeCells(18, 17, "LCINOL", 1, 0) },
-  { id: "LOCK_-MET", color: "red", minScore: 30, cells: makeCells(5, 4, "-MET", 1, 0) },
-  { id: "LOCK_Y", color: "red", minScore: 30, cells: makeCells(10, 4, "Y", 1, 0) },
-  { id: "LOCK_PHENOL", color: "red", minScore: 30, cells: makeCells(12, 4, "PHENOL", 1, 0) },
+  { id: "LOCK_O-CR", color: "yellow", minScore: 15, cells: makeCells(1, 11, "O-CR", 0, 1) },
+  { id: "LOCK_SOL", color: "yellow", minScore: 10, cells: makeCells(1, 16, "SOL", 0, 1) },
+  { id: "LOCK_ANKY", color: "yellow", minScore: 25, cells: makeCells(11, 0, "ANKY", 0, 1) },
+  { id: "LOCK_TEIN", color: "yellow", minScore: 15, cells: makeCells(22, 9, "TEIN", 1, 0) },
+  { id: "LOCK_PR", color: "yellow", minScore: 10, cells: makeCells(19, 9, "PR", 1, 0) },
+  { id: "LOCK_MONO", color: "red", minScore: 10, cells: makeCells(9, 0, "MONO", 0, 1) },
+  { id: "LOCK_YD", color: "red", minScore: 10, cells: makeCells(9, 5, "YD", 0, 1) },
+  { id: "LOCK_OXYBENZ", color: "red", minScore: 5, cells: makeCells(9, 8, "OXYBENZ", 0, 1) },
+  { id: "LOCK_NE", color: "red", minScore: 5, cells: makeCells(9, 16, "NE", 0, 1) },
+  { id: "LOCK_HYDR", color: "yellow", minScore: 10, cells: makeCells(15, 2, "HYDR", 1, 0) },
+  { id: "LOCK_QUINONE", color: "yellow", minScore: 15, cells: makeCells(20, 2, "QUINONE", 1, 0) },
+  { id: "LOCK_RES", color: "red", minScore: 15, cells: makeCells(14, 17, "RES", 1, 0) },
+  { id: "LOCK_RCINOL", color: "red", minScore: 15, cells: makeCells(18, 17, "RCINOL", 1, 0) },
+  { id: "LOCK_-MET", color: "red", minScore: 10, cells: makeCells(5, 4, "-MET", 1, 0) },
+  { id: "LOCK_Y", color: "red", minScore: 10, cells: makeCells(10, 4, "Y", 1, 0) },
+  { id: "LOCK_PHENOL", color: "red", minScore: 10, cells: makeCells(12, 4, "PHENOL", 1, 0) },
   { id: "LOCK_TTAN", color: "yellow", minScore: 20, cells: makeCells(22, 15, "TTAN", 1, 0) }
 ];
 
 const questions = [
   {
     key: "HYDROXYL",
-    clue: "Điền vào chỗ trống: “Phenol là hợp chất hữu cơ trong đó nhóm _________ liên kết trực tiếp với nguyên tử carbon của vòng benzene.”"
+    clue: "Điền vào chỗ trống: “Phenol là hợp chất hữu cơ trong đó nhóm _________ liên kết trực tiếp với nguyên tử carbon của vòng benzene.”",
+    imageUrl:"general.jpg"
   },
   {
     key: "TRIHYDROXYBENZENE",
-    clue: "Phenol có 3 gốc OH- gắn quanh vòng benzen có tên gọi là gì?"
+    clue: "Phenol có 3 gốc OH- gắn quanh vòng benzen có tên gọi là gì?",
+    imageUrl:"general.jpg"
   },
   {
     key: "C6H4OHR",
-    clue: "Nêu công thức tổng quát của phenol đơn chức mạch hở gắn vào vòng benzen. (Với R là gốc Ankyl)"
+    clue: "Nêu công thức tổng quát của phenol đơn chức mạch hở gắn vào vòng benzen. (Với R là gốc Ankyl)",
+    imageUrl:"general.jpg"
   },
   {
     key: "ETHANOL",
-    clue: "Điền vào chỗ trống: “Khi da bị bỏng bởi tiếp xúc với Phenol, nên dùng bông thấm _________ để hòa tan Phenol ra khỏi da trước khi rửa lại bằng nước.”"
+    clue: "Điền vào chỗ trống: “Khi da bị bỏng bởi tiếp xúc với Phenol, nên dùng bông thấm _________ để hòa tan Phenol ra khỏi da trước khi rửa lại bằng nước.”",
+    imageUrl:"general.jpg"
   },
   {
     key: "NHUOMHONG",
-    clue: "Do tính oxi hoá chậm, khi để Phenol ngoài không khí lâu có thể gây hiện tượng gì?"
+    clue: "Do tính oxi hoá chậm, khi để Phenol ngoài không khí lâu có thể gây hiện tượng gì?",
+    imageUrl:"general.jpg"
   },
   {
     key: "PHENOL",
-    clue: "Sắp xếp các chữ cái để tạo thành từ có liên quan đến bài học: P / H / E / L / O / N"
+    clue: "Sắp xếp các chữ cái để tạo thành từ có liên quan đến bài học: P / H / E / L / O / N",
+    imageUrl:"general.jpg"
   },
   {
     key: "NHUTUONG",
-    clue: "Có một chỗ bị khuất trên bảng trên. Hãy điền vào chỗ trống 1 cụm từ thích hợp để giúp bạn học sinh hoàn thành bảng trên."
+    clue: "Có một chỗ bị khuất trên bảng trên. Hãy điền vào chỗ trống 1 cụm từ thích hợp để giúp bạn học sinh hoàn thành bảng trên.",
+    imageUrl:"general.jpg"
   },
   {
     key: "NHIETDOSOI",
-    clue: "Điền vào chỗ trống: “____________ của Phenol cao do có liên kết hydrogen giữa các phân tử.”"
+    clue: "Điền vào chỗ trống: “____________ của Phenol cao do có liên kết hydrogen giữa các phân tử.”",
+    imageUrl:"general.jpg"
   },
   {
     key: "DELOCALIZED",
-    clue: "Điền vào chỗ trống: “Khi nói về Phenol, một phần mật độ electron được ________(phân bố) vào vòng benzen, từ đó làm tăng mật độ electron ở các vị trí ortho và para.”"
+    clue: "Điền vào chỗ trống: “Khi nói về Phenol, một phần mật độ electron được ________(phân bố) vào vòng benzen, từ đó làm tăng mật độ electron ở các vị trí ortho và para.”",
+    imageUrl:"general.jpg"
   },
   {
     key: "O-CRESOL",
@@ -146,7 +155,8 @@ const questions = [
   },
   {
     key: "4-METHYLPHENOL",
-    clue: "Nhìn video để trả lời từ khóa"
+    clue: "Nhìn hình ảnh để trả lời từ khóa",
+    imageUrl:"4-methylphenol.jpg"
   },
   {
     key: "ITTAN",
@@ -250,6 +260,7 @@ const lockById = new Map();
 const unlockedLockIds = new Set();
 const lockedCells = new Set();
 const intersectionCells = new Set();
+const lockWordKeys = new Set(); // question keys that have at least one lock cell initially
 
 let questionTimerId = null;
 let questionRemain = 10;
@@ -291,6 +302,20 @@ for (const lock of lockRules) {
   }
   for (const [k, count] of useCount.entries()) {
     if (count > 1) intersectionCells.add(k);
+  }
+}
+
+// Pre-compute which question words have a lock cell "at the start".
+for (const q of questions) {
+  const w = keyToPlacedWord.get(q.key);
+  if (!w) continue;
+  for (const cell of w.cells) {
+    const ck = keyFor(cell.r, cell.c);
+    if (intersectionCells.has(ck)) continue;
+    if (lockByCell.has(ck)) {
+      lockWordKeys.add(q.key);
+      break;
+    }
   }
 }
 
@@ -390,8 +415,8 @@ function showWinnerModal(winnerTeam) {
       Chúc mừng <span style="color: ${winnerTeam === 'RED' ? 'red' : 'blue'}">${winnerTeam}</span> đã giành chiến thắng!
     </div>
     <div style="margin-top: 20px;">
-      <p>Tổng điểm đội ĐỎ: ${score.RED.points}$</p>
-      <p>Tổng điểm đội XANH: ${score.BLUE.points}$</p>
+      <p>Tổng điểm đội ĐỎ: ${score.RED.points}đ</p>
+      <p>Tổng điểm đội XANH: ${score.BLUE.points}đ</p>
     </div>
   `;
   
@@ -697,12 +722,19 @@ function renderBoard() {
           tryUnlock(clickedLockId);
           return;
         }
-        if (
-          qKey &&
-          !boardLockedByTimer &&
-          !revealedQuestionKeys.has(qKey) &&
-          !solvedBy[qKey]
-        ) {
+        if (!qKey || boardLockedByTimer) return;
+
+        // Always allow selecting/highlighting the question word for answering.
+        const qIdx = questions.findIndex((q) => q.key === qKey);
+        if (qIdx >= 0) {
+          selectedQuestionIndex = qIdx;
+          selectedQuestionEl.textContent = `Đang chọn Câu ${qIdx + 1}. Điền đáp án trên bảng rồi bấm Trả lời câu đang chọn.`;
+          highlightQuestionWord(qKey);
+        }
+
+        // Only open the popup the first time via board click.
+        // To see it again, use the "Hiện lại câu hỏi" button.
+        if (!solvedBy[qKey] && !revealedQuestionKeys.has(qKey)) {
           openQuestionModalForKey(qKey);
         }
       });
@@ -818,25 +850,46 @@ submitAnswerBtn.addEventListener("click", () => {
   }
 
   const cells = getWordCells(w);
+  // Only lock the word when the whole answer is correct.
+  // If incorrect, keep all cells editable (do not lock the "correct" letters).
   let isCorrect = true;
+  const typedVals = cells.map((cell) => (cell.value || "").toUpperCase());
+  const expectedVals = w.cells.map((c) => (c.ch || "").toUpperCase());
 
-  cells.forEach((cell, idx) => {
-    const typed = (cell.value || "").toUpperCase();
-    const expected = w.cells[idx].ch.toUpperCase();
-    if (typed !== expected) {
+  for (let i = 0; i < expectedVals.length; i += 1) {
+    if ((typedVals[i] || "") !== (expectedVals[i] || "")) {
       isCorrect = false;
-      if (!cell.readOnly) cell.classList.add("bad");
-    } else {
-      cell.classList.remove("bad");
+      break;
+    }
+  }
+
+  // Clear old marks first
+  cells.forEach((cell) => cell.classList.remove("bad", "good"));
+
+  if (!isCorrect) {
+    // Wrong: mark the whole word as wrong (except yellow hint cells).
+    cells.forEach((cell) => {
+      if (cell.readOnly) return;
+      if (cell.classList.contains("yellow")) {
+        cell.classList.remove("bad");
+        return;
+      }
+      cell.classList.add("bad");
+    });
+  } else {
+    cells.forEach((cell, idx) => {
       cell.classList.add("good");
       cell.readOnly = true;
-    }
-  });
+      // Ensure final value is exactly the expected character
+      cell.value = expectedVals[idx] || "";
+    });
+  }
 
   if (isCorrect) {
     solvedBy[q.key] = activeTeam;
-    score[activeTeam].points += 10;
-    turnStatusEl.textContent = `Dung! Doi ${activeTeam} +10 diem cho Cau ${selectedQuestionIndex + 1}.`;
+    const award = lockWordKeys.has(q.key) ? 20 : 10;
+    score[activeTeam].points += award;
+    turnStatusEl.textContent = `Dung! Doi ${activeTeam} +${award} diem cho Cau ${selectedQuestionIndex + 1}.`;
     updateScoreUI();
     closeQuestionModal();
     return;
@@ -863,11 +916,14 @@ scoreToolButtons.forEach((btn) => {
 });
 
 reopenQuestionBtn.addEventListener("click", () => {
-  if (!lastOpenedQuestionKey) {
-    turnStatusEl.textContent = "Chua co cau hoi nao duoc mo truoc do.";
+  // Reopen the question for the currently selected/highlighted keyword.
+  const selectedKey = questions[selectedQuestionIndex]?.key || null;
+  const key = selectedKey || lastOpenedQuestionKey;
+  if (!key) {
+    turnStatusEl.textContent = "Chua co cau hoi nao dang duoc chon.";
     return;
   }
-  openQuestionModalForKey(lastOpenedQuestionKey);
+  openQuestionModalForKey(key);
 });
 
 qStartTimerBtn.addEventListener("click", startQuestionTimer);
