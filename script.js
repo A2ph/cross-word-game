@@ -116,7 +116,7 @@ const questions = [
   },
   {
     key: "NHUTUONG",
-    clue: "Có một chỗ bị khuất trên bảng trên. Hãy điền vào chỗ trống 1 cụm từ thích hợp để giúp bạn học sinh hoàn thành bảng trên.",
+    clue: "Một bạn học sinh lập bảng tổng hợp tính chất vật lý của Phenol sau khi làm một số thực nghiệm và ghi vào bảng như bên dưới. Có một chỗ bị khuất trong bảng. Hãy điền vào chỗ trống 1 cụm từ thích hợp để giúp bạn học sinh hoàn thành bảng nhé.",
     imageUrl:"general.jpg"
   },
   {
