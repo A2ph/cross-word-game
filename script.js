@@ -49,10 +49,10 @@ const placedWords = [
   { id: "NHUOMHONG", key: "NHUOMHONG", cells: makeCells(15, 7, "NHUOMHONG", 0, 1) },
   { id: "PHENOL", key: "PHENOL", cells: makeCells(14, 12, "PHENOL", 1, 0) },
   { id: "NHUTUONG", key: "NHUTUONG", cells: makeCells(17, 12, "NHUTUONG", 0, 1) },
-  { id: "NHIETDOSOI", key: "NHIETDOSOI", cells: makeCells(21, 7, "IOSODTEIHN", 0, 1) },
+  { id: "NHIETDOSOI", key: "NHIETDOSOI", cells: makeCells(21, 8, "IOSODTEIHN", 0, 1) },
   { id: "O-CRESOL", key: "O-CRESOL", cells: makeCells(1, 11, "O-CRESOL", 0, 1) },
   { id: "ANKYL", key: "ANKYL", cells: makeCells(11, 0, "ANKYL", 0, 1) },
-  { id: "PROTEIN", key: "PROTEIN", cells: makeCells(19, 9, "PROTEIN", 1, 0) },
+  { id: "PROTEIN", key: "PROTEIN", cells: makeCells(20, 9, "PROTEIN", 1, 0) },
   { id: "MONOHYDROXYBENZENE", key: "MONOHYDROXYBENZENE", cells: makeCells(9, 0, "MONOHYDROXYBENZENE", 0, 1) },
   { id: "HYDROQUINONE", key: "HYDROQUINONE", cells: makeCells(15, 2, "HYDROQUINONE", 1, 0) },
   { id: "RESORCINOL", key: "RESORCINOL", cells: makeCells(14, 17, "RESORCINOL", 1, 0) },
@@ -136,7 +136,8 @@ const questions = [
   },
   {
     key: "PROTEIN",
-    clue: "Nhìn video để trả lời từ khóa"
+    clue: "Nhìn video để trả lời từ khóa",
+    videoUrl:"protein.mp4"
   },
   {
     key: "MONOHYDROXYBENZENE",
@@ -160,11 +161,13 @@ const questions = [
   },
   {
     key: "ITTAN",
-    clue: "Nhìn video để trả lời từ khóa"
+    clue: "Nhìn hình ảnh để trả lời từ khóa",
+    imageUrl:"ittan.jpg"
   },
   {
     key: "ANKYL",
-    clue: "Chơi Roblox để trả lời từ khóa"
+    clue: "Chơi Roblox để trả lời từ khóa",
+    imageUrl:"ankyl.jpg"
   }
 ];
 
@@ -672,15 +675,21 @@ function renderBoard() {
       if (prevVal && prevVal !== "🔒") {
         input.value = prevVal;
       }
-      
+       
       // Kiểm tra khóa
-      if(lockedCells.has(`${r}-${c}`)) {
-          input.readOnly = true;
+      const isLockedSolved = lockedCells.has(`${r}-${c}`);
+      if (isLockedSolved) {
+        input.readOnly = true;
+        // Ensure solved cells stay correct across re-renders (e.g. after unlocking).
+        input.value = solution;
       }
     
 
       if (yellowCells.has(keyFor(r, c))) {
         input.classList.add("yellow");
+      }
+      if (isLockedSolved && !input.classList.contains("yellow")) {
+        input.classList.add("good");
       }
 
       const cellKey = keyFor(r, c);
@@ -697,7 +706,7 @@ function renderBoard() {
         input.classList.add("lock-cell");
         input.classList.add(lock.color === "red" ? "lock-red" : "lock-yellow");
       } else
-      if (!hiddenCellSet.has(cellKey)) {
+      if (!hiddenCellSet.has(cellKey) && !isLockedSolved) {
         input.value = "";
         input.readOnly = false;
         input.classList.remove("lock-cell", "lock-red", "lock-yellow");
@@ -801,7 +810,9 @@ checkBtn.addEventListener("click", () => {
       wrong += 1;
       cell.classList.add("bad");
     } else {
-      cell.classList.add("good");
+      if (!cell.classList.contains("yellow")) {
+        cell.classList.add("good");
+      }
       cell.readOnly = true;
       //cell.dataset.locked="true";
       lockedCells.add(`${cell.dataset.row}-${cell.dataset.col}`);
@@ -878,10 +889,13 @@ submitAnswerBtn.addEventListener("click", () => {
     });
   } else {
     cells.forEach((cell, idx) => {
-      cell.classList.add("good");
+      if (!cell.classList.contains("yellow")) {
+        cell.classList.add("good");
+      }
       cell.readOnly = true;
       // Ensure final value is exactly the expected character
       cell.value = expectedVals[idx] || "";
+      lockedCells.add(`${cell.dataset.row}-${cell.dataset.col}`);
     });
   }
 
